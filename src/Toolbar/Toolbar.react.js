@@ -39,6 +39,9 @@ const propTypes = {
      * Called when user press submit button on hw keyboard
      */
     onSubmitEditing: PropTypes.func,
+    // renderItem: PropTypes.func,
+    // dataComplete: PropTypes.array, 
+    // containerStyle: ViewPropTypes.style,
     /**
      * Will shown as placeholder for search input.
      */
@@ -54,14 +57,14 @@ const propTypes = {
     /**
      * Enable auto-correct for search input
      */
-    autoCorrect: PropTypes.bool,
+    autoCorrect: PropTypes.bool,    
     /**
      * Override default search icon
      */
     icon: PropTypes.string,
   }),
   /**
-   * You can override any style for the component via this prop
+   * You can overide any style for the component via this prop
    */
   style: PropTypes.shape({
     container: ViewPropTypes.style,
@@ -81,6 +84,7 @@ const propTypes = {
    * Wether or not the Toolbar should show
    */
   hidden: PropTypes.bool,
+  searchLoading: PropTypes.bool,
   /**
    * Called when centerElement was pressed.
    * TODO: better to rename to onCenterElementPress
@@ -187,12 +191,13 @@ class Toolbar extends PureComponent {
       order: isSearchActiveInternal ? 'searchFirst' : 'defaultFirst',
       // toolbar animation - you can hide toolbar via hidden prop
       positionValue: new Animated.Value(0),
+      isLoading: false,
     };
   }
 
   componentWillReceiveProps(nextProps) {
     const { isSearchActiveInternal } = this.state;
-    const { isSearchActive, hidden } = this.props;
+    const { isSearchActive, hidden, searchLoading, clearSearch } = this.props;
 
     // if search is active and we clicked on the results which does not allow search
     // then close the previous search.
@@ -223,6 +228,9 @@ class Toolbar extends PureComponent {
         this.show();
       }
     }
+      
+    this.showLoading(nextProps.searchLoading);    
+    this.clearTextSearch();    
   }
 
   onSearchOpenRequested = () => {
@@ -439,10 +447,22 @@ class Toolbar extends PureComponent {
     return <View style={StyleSheet.absoluteFill}>{content}</View>;
   };
 
+  showLoading = (b) => {
+    this.setState({ isLoading: b })
+  }
+
+  clearTextSearch = () => {
+    this.setState({ searchValue: '' })
+    this.animateDefaultBackground(() => {
+      // default scale set up back to "hidden" value
+      searchScaleValue.setValue(0.01); 
+    });
+  }
+
   render() {
     const { onLeftElementPress, onPress, onRightElementPress } = this.props;
 
-    const { isSearchActiveInternal, searchValue, positionValue } = this.state;
+    const { isSearchActiveInternal, searchValue, positionValue, isLoading } = this.state;
     // TODO: move out from render method
     const styles = getStyles(this.props);
 
@@ -470,6 +490,7 @@ class Toolbar extends PureComponent {
         />
         <RightElement
           {...this.props}
+          searchLoading={isLoading}
           searchValue={searchValue}
           isSearchActive={isSearchActiveInternal}
           onSearchPress={this.onSearchPressed}

@@ -1,7 +1,7 @@
 /* eslint-disable import/no-unresolved, import/extensions */
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import { View, StyleSheet, NativeModules, findNodeHandle } from 'react-native';
+import { View, StyleSheet, NativeModules, findNodeHandle, ActivityIndicator } from 'react-native';
 /* eslint-enable import/no-unresolved, import/extensions */
 import { ViewPropTypes } from '../utils';
 
@@ -17,7 +17,8 @@ const propTypes = {
   searchValue: PropTypes.string.isRequired,
   // We need just check if searchable exists
   // TODO: pass bool to this component
-  searchable: PropTypes.object, // eslint-disable-line
+  searchable: PropTypes.object, // eslint-disable-line   
+  searchLoading: PropTypes.bool,   
   style: PropTypes.shape({
     rightElementContainer: ViewPropTypes.style,
     rightEle: ViewPropTypes.style,
@@ -40,7 +41,8 @@ const defaultProps = {
   size: null,
   style: {},
   searchable: null,
-  iconSet: null,
+  searchLoading: false,
+  iconSet: 'MaterialCommunityIcons',
 };
 
 function getStyles(props) {
@@ -92,6 +94,7 @@ class RightElement extends PureComponent {
       rightElement,
       onRightElementPress,
       searchable,
+      searchLoading,
       size,
       searchValue,
       onSearchClearRequest,
@@ -165,7 +168,7 @@ class RightElement extends PureComponent {
               onPress={onSearchClearRequest}
             />,
           );
-        }
+        }        
       } else {
         result.push(
           <IconToggle
@@ -210,8 +213,13 @@ class RightElement extends PureComponent {
     }
 
     return (
-      <View testID={rightElementTestID} style={styles.rightElementContainer}>
-        {result}
+      <View testID={rightElementTestID} style={styles.rightElementContainer}>  
+        {
+          searchLoading ?          
+          <View style={{padding: 15}}>
+            <ActivityIndicator size="small" color="gray" />
+          </View>
+        : result}
       </View>
     );
   }
