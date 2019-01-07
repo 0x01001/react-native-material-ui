@@ -85,6 +85,7 @@ const propTypes = {
    */
   hidden: PropTypes.bool,
   searchLoading: PropTypes.bool,
+  clearSearch: PropTypes.bool,
   /**
    * Called when centerElement was pressed.
    * TODO: better to rename to onCenterElementPress
@@ -229,8 +230,10 @@ class Toolbar extends PureComponent {
       }
     }
       
-    this.showLoading(nextProps.searchLoading);    
-    this.clearTextSearch();    
+    this.showLoading(nextProps.searchLoading);  
+    if (nextProps.clearSearch !== clearSearch) {
+      this.onSearchCloseRequested();    
+    }
   }
 
   onSearchOpenRequested = () => {
@@ -450,15 +453,7 @@ class Toolbar extends PureComponent {
   showLoading = (b) => {
     this.setState({ isLoading: b })
   }
-
-  clearTextSearch = () => {
-    this.setState({ searchValue: '' })
-    this.animateDefaultBackground(() => {
-      // default scale set up back to "hidden" value
-      searchScaleValue.setValue(0.01); 
-    });
-  }
-
+ 
   render() {
     const { onLeftElementPress, onPress, onRightElementPress } = this.props;
 
