@@ -8,6 +8,7 @@ import {
   TextInput,
   Easing,
 } from 'react-native';
+// import Autocomplete from 'react-native-autocomplete-input'
 /* eslint-enable import/no-unresolved, import/extensions */
 import { ViewPropTypes } from '../utils';
 import withTheme from '../styles/withTheme';
@@ -20,8 +21,11 @@ const propTypes = {
     autoCapitalize: TextInput.propTypes.autoCapitalize, // eslint-disable-line
     autoCorrect: PropTypes.bool,
     onChangeText: PropTypes.func,
-    onSubmitEditing: PropTypes.func,
+    onSubmitEditing: PropTypes.func,   
     placeholder: PropTypes.string,
+    // dataComplete: PropTypes.array,
+    // renderItem: PropTypes.func,
+    // containerStyle: ViewPropTypes.style,
   }),
   style: PropTypes.shape({
     centerElementContainer: ViewPropTypes.style,
@@ -112,6 +116,11 @@ class CenterElement extends PureComponent {
     });
   };
 
+  tesst = () => {
+    console.log('fuckkkkkkk');
+    
+  }
+
   render() {
     const {
       searchable,
@@ -140,6 +149,7 @@ class CenterElement extends PureComponent {
           ref={ref => {
             this.searchFieldRef = ref;
           }}
+          blurOnSubmit={true}
           autoFocus={searchable.autoFocus}
           autoCapitalize={searchable.autoCapitalize}
           autoCorrect={searchable.autoCorrect}
@@ -150,6 +160,24 @@ class CenterElement extends PureComponent {
           underlineColorAndroid="transparent"
           value={searchValue}
         />
+        // <Autocomplete
+        //   ref={ref => {
+        //     this.searchFieldRef = ref;
+        //   }}
+        //   autoFocus={searchable.autoFocus}
+        //   autoCapitalize={searchable.autoCapitalize}
+        //   autoCorrect={searchable.autoCorrect}
+        //   onChangeText={onSearchTextChange}
+        //   placeholder={searchable.placeholder}
+        //   style={[styles.titleText, { marginLeft: 0 }]}
+        //   underlineColorAndroid="transparent"
+        //   value={searchValue}
+        //   onSubmitEditing={searchable.onSubmitEditing}
+        //   defaultValue={searchValue}
+        //   data={searchable.dataComplete}
+        //   containerStyle={searchable.containerStyle}
+        //   renderItem={searchable.renderItem} 
+        // />
       );
     } else if (typeof centerElement === 'string') {
       content = (
